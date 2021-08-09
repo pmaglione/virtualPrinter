@@ -71,7 +71,7 @@ class PrintServer(object):
 			self.osPrinterManager.addPrinter(self.printerName,ip,port,
 				self.printerPortName,makeDefault,comment)
 		else:
-			print 'WARN: Auto printer installation not implemented for '+os.name
+			print('WARN: Auto printer installation not implemented for '+os.name)
 
 	def _uninstallPrinter(self):
 		"""
@@ -80,6 +80,45 @@ class PrintServer(object):
 		if self.osPrinterManager:
 			self.osPrinterManager.removePrinter(self.printerName)
 			self.osPrinterManager.removePort(self.printerPortName)
+
+	def _printScreen(self, alldata):
+		alldata = str(alldata)
+		lines = alldata.split('n')
+		for line in lines:
+			if "b'x1b@" in line:
+			    line = line.replace("b'x1b@','")  #strip printerInitialize
+			    print('PRINTER INITIALIZE')
+			if 'x1d(Lx06x000E00' in line:
+			    line = line.replace('x1d(Lx06x000E00x01x01','')  #strip printerNVLogo
+			    print('          ====PRINT NV LOGO====')
+			    print()
+			line = line.replace('x1bpx00x1b@','POP DRAWER 1')  #strip printerPopDrawer1
+			line = line.replace('x1bpx01x1b@','POP DRAWER 2')  #strip printerPopDrawer1
+			line = line.replace('x1b!x00','')  #strip printerPrintModeBase
+			if 'x1bax01' in line:
+			    line = line.replace('x1bax01','')  #strip center justify
+			    if 'x1b!x08' in line:
+			        line = line.replace('x1b!x08','')  #strip bold style
+			    line = line.center(42, ' ')
+			    line = 'x1b!x08' + line   #add back bold formatting
+			if 'x1bax02' in line:
+			    line = line.replace('x1bax02','')  #strip right justify
+			    line = line.rjust(42, ' ')
+			if 'x1dVAt' in line:
+			    line = line.replace("x1dVAt'",'PAPER CUT')  #strip printerPartialCut
+			    line = line.center(42, '=')
+			if 'x1b!x08' in line:
+			    if 'x1bax00' in line:
+			        line = line.replace('x1bax00','')  #strip left justify
+			        line = line.ljust(42, ' ')
+			    line = line.replace('x1b!x08','')  #strip bold style
+			    print(line,'bold')  #this would be bold
+			else:
+			    line = line.replace('x1b!','')  #strip printerPrintModeBase
+			    if 'x1bax00' in line:
+			        line = line.replace('x1bax00','')  #strip left justify
+			        line = line.ljust(42, ' ')
+			    print(line,'')
 
 	def run(self):
 		"""
@@ -90,15 +129,16 @@ class PrintServer(object):
 		self.running=True
 		self.keepGoing=True
 		sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		sock.bind((self.ip,self.port))
+		server_address = (self.ip,self.port)
+		sock.bind(server_address)
 		ip,port=sock.getsockname()
-		print 'Opening',ip+':'+str(port)
+		print ('Opening',ip+':'+str(port))
 		if self.autoInstallPrinter:
 			self._installPrinter(ip,port)
 		#sock.setblocking(0)
 		sock.listen(1)
 		while self.keepGoing:
-			print '\nListening for incoming print job...'
+			print ('\nListening for incoming print job...')
 			while self.keepGoing: # let select() yield some time to this thread
 									#so we can detect ctrl+c and keepGoing change
 				inputready,outputready,exceptready=select.select([sock],[],[],1.0)
@@ -106,16 +146,23 @@ class PrintServer(object):
 					break
 			if not self.keepGoing:
 				continue
-			print 'Incoming job... spooling...'
+			print ('Incoming job... spooling...')
 			conn,addr=sock.accept()
 			if self.printCallbackFn is None:
-				f=open('I_printed_this.ps','wb')
+				alldata = b''
+				# C:\Users\PedroMaglione\Projects\pythonPrinter
+				current_dir = os.getcwd()
+				print_file_path = current_dir + "\\prints\\I_printed_this.txt"
+				f=open(print_file_path,'wb')
 				while True:
 					data=conn.recv(self.buffersize)
 					if not data:
 						break
+					alldata += data
 					f.write(data)
 					f.flush()
+				self._printScreen(alldata)
+				os.startfile(print_file_path, "print")
 			elif True:
 				buf=[]
 				while True:
@@ -185,10 +232,13 @@ class PrintServer(object):
 
 if __name__=='__main__':
 	import sys
-	port=9001
-	ip='127.0.0.1'
+	import socket
+	hostname = socket.gethostname()
+	ip_address = socket.gethostbyname(hostname)
+	port=9100
+	ip=ip_address #"127.0.0.1" 
 	runit=True
 	for arg in sys.argv[1:]:
 		pass # TODO: do args
-	ps=PrintServer(ip, port)
+	ps=PrintServer("My Virtual Printer", ip, port)
 	ps.run()

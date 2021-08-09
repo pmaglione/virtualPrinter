@@ -26,36 +26,36 @@ class WindowsPrinters(object):
 		Remove a printer port
 		"""
 		cmd=r'cscript c:\Windows\System32\Printing_Admin_Scripts\en-US\prnport.vbs -d -r "'+printerPortName+'"'
-		print cmd
+		print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def removePrinter(self,name):
 		"""
 		Remove an installed printer
 		"""
 		cmd=r'rundll32 printui.dll,PrintUIEntry /dl /n "'+name+'"'
-		#print cmd
+		#print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def listPorts(self):
 		"""
 		List all installed printer ports
 		"""
 		cmd=r'cscript c:\Windows\System32\Printing_Admin_Scripts\en-US\prnport.vbs -l'
-		#print cmd
+		#print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def makePrinterDefault(self,name):
 		"""
 		Assign a printer to be the system default
 		"""
 		cmd=r'rundll32 printui.dll,PrintUIEntry /y /n "'+name+'"'
-		#print cmd
+		#print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def setPrinterComment(self,name,comment):
 		"""
@@ -63,9 +63,9 @@ class WindowsPrinters(object):
 		"""
 		comment=comment.replace('"','\\"').replace('\n','\\n')
 		cmd=r'rundll32 printui.dll,PrintUIEntry /Xs /n "'+name+'" comment "'+comment+'"'
-		#print cmd
+		#print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def addPrinter(self,name,host='127.0.0.1',port=9101,printerPortName=None,makeDefault=False,comment=None):
 		"""
@@ -76,14 +76,14 @@ class WindowsPrinters(object):
 		if printerPortName is None:
 			printerPortName=host+':'+port
 		cmd=r'cscript c:\Windows\System32\Printing_Admin_Scripts\en-US\prnport.vbs -md -a -o raw -r "'+printerPortName+'" -h '+host+' -n '+port
-		#print cmd
+		#print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 		# -- create the printer
 		cmd=r'rundll32 printui.dll,PrintUIEntry /if /b "'+name+'" /r "'+printerPortName+'" /m "'+self.defaultPostscriptPrinterDriver+'" /Z'
-		print cmd
+		print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 		# -- set the default printer flag
 		if makeDefault:
 			self.makePrinterDefault(name)
@@ -96,18 +96,18 @@ class WindowsPrinters(object):
 		Send a test page to the given printer
 		"""
 		cmd=r'rundll32 printui.dll,PrintUIEntry /k /n "'+name+'"'
-		print cmd
+		print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def showSettingsDialog(self,name):
 		"""
 		Pop up the settings dialog for a given printer
 		"""
 		cmd=r'rundll32 printui.dll,PrintUIEntry /e /n "'+name+'"'
-		print cmd
+		print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def saveSettings(self,name,filename):
 		"""
@@ -116,9 +116,9 @@ class WindowsPrinters(object):
 		(I have no idea what the format is, so it cannot yet be edited externally.)
 		"""
 		cmd=r'rundll32 printui.dll,PrintUIEntry /Ss /n "'+name+'" /a "'+filename+'"'
-		print cmd
+		print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def loadSettings(self,name,filename):
 		"""
@@ -127,9 +127,9 @@ class WindowsPrinters(object):
 		(I have no idea what the format is, so it cannot yet be edited externally.)
 		"""
 		cmd=r'rundll32 printui.dll,PrintUIEntry /Sr /n "'+name+'" /a "'+filename+'"'
-		print cmd
+		print("cmd")
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 
 	def showPrintUIdllOptions(self):
 		"""
@@ -137,12 +137,12 @@ class WindowsPrinters(object):
 		"""
 		cmd=r'rundll32 PrintUI.dll,PrintUIEntry /?'
 		stdout,_=subprocess.Popen(cmd,stdin=None,stderr=subprocess.STDOUT,stdout=subprocess.PIPE,shell=True).communicate()
-		print stdout
+		print("stdout")
 		#ctypes.windll.PrintUI.PrintUIEntry('/?') # it might be cool to do this someday
 
 
 if __name__=='__main__':
-	print "Presently the command line is diagnostic only, registering, and then unregistering a printer"
+	print("Presently the command line is diagnostic only, registering, and then unregistering a printer")
 	p=WindowsPrinters()
 	p.addPrinter("my new printer")
 	p.removePrinter("my new printer")
