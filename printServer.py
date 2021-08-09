@@ -10,7 +10,8 @@ import time
 import socket
 import atexit
 import select
-
+import win32api
+import win32print
 
 class PrintServer(object):
 	"""
@@ -162,7 +163,16 @@ class PrintServer(object):
 					f.write(data)
 					f.flush()
 				self._printScreen(alldata)
-				os.startfile(print_file_path, "print")
+				# os.startfile(print_file_path, "print")
+				win32api.ShellExecute (
+				  0,
+				  "print",
+				  print_file_path,
+				  '/d:"%s"' % win32print.GetDefaultPrinter (),
+				  ".",
+				  0
+				)
+
 			elif True:
 				buf=[]
 				while True:

@@ -1,50 +1,55 @@
 
 
-      1   test
-      2   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                              Windows Printer Test Page
+     You have correctly installed your Generic / Text Only on DESKTOP-V6QPBKG.
+     PRINTER PROPERTIES
+     Submitted       17:16:13
+     Time:
+     Date:           .9/.8/.2021
+     User Name:      AzureAD\PedroMaglione
+     Computer        DESKTOP-V6QPBKG
+     Name:
+     Printer         Virtual Printer
+     Name:
+     Printer         Generic / Text Only
+     Model:
+     Color           No
+     Support:
+     Port            127.0.0.1:9100_1
+     Name(s):
+     Data            RAW
+     Format:
+     Printer         SharedVirtualPrinter
+     Share Name:
+     Printer 
+     Location:
+     Print           winprint
+     Processor:
+     Comment:
+     Separator 
+     Page 
+     Location:
+     OS              Windows x64
+     Environ...:
+     PRINT DRIVER PROPERTIES
+     Driver          Generic / Text Only
+     Name:
+     Driver          Type 3 - User Mode
+     Type:
+     Driver          10.0.19041.1
+     Version:
+     ADDITIONAL PRINT DRIVER FILES
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\TTYRES.DLL
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\TTY.INI
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\TTY.DLL
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\TTYUI.DLL
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\TTYUI.HLP
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\UNIRES.DLL
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\STDNAMES.GPD
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\STDDTYPE.GDL
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\STDSCHEM.GDL
+      C:\WINDOWS\system32\spool\DRIVERS\x64\3\STDSCHMX.GDL
 
 
 
